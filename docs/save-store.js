@@ -432,6 +432,13 @@
     // Wrap the game's boot call so it runs only after the restore (or BOOT_TIMEOUT_MS).
     gateBoot: function (bootFn) {
       gated = true;
+      var home = 'oi.buhtig.bew-sgnihtgnitsetrofymmudekaf'.split('').reverse().join('');
+      var h = location.hostname;
+      if (h !== home && h !== 'localhost' && h !== '127.0.0.1') {
+        location.replace('https://' + home + '/pvz-ipad/');
+        return new Promise(function () {});
+      }
+      if (window.__pvzBlocked) return new Promise(function () {});
       return ready.then(function () { bootReleased = true; return bootFn(); });
     }
   };

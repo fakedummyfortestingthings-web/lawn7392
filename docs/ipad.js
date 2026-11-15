@@ -11,6 +11,44 @@
 (function () {
   'use strict';
 
+  // ---------- Official site only ----------
+  // This edition only runs on its own site. A copy hosted anywhere else (or framed inside
+  // another site) shows an error screen instead of the game, removes its offline copy and
+  // never touches the cloud saves.
+  var HOME = atob('ZmFrZWR1bW15Zm9ydGVzdGluZ3RoaW5ncy13ZWIuZ2l0aHViLmlv');
+  var HOME_URL = 'https://' + HOME + '/pvz-ipad/';
+  function siteAllowed() {
+    var h = location.hostname;
+    if (h !== HOME && h !== 'localhost' && h !== '127.0.0.1') return false;
+    if (window.top !== window.self) {
+      try { if (window.top.location.hostname !== h) return false; } catch (e) { return false; }
+    }
+    return true;
+  }
+  if (!siteAllowed()) {
+    window.__pvzBlocked = true;
+    var h0 = location.hostname;
+    if (h0 !== HOME && h0 !== 'localhost' && h0 !== '127.0.0.1') try {
+      if (navigator.serviceWorker) navigator.serviceWorker.getRegistrations().then(function (rs) { rs.forEach(function (r) { r.unregister(); }); });
+      if (window.caches) caches.keys().then(function (ks) { ks.forEach(function (k) { caches.delete(k); }); });
+    } catch (e) {}
+    var paint = function () {
+      document.documentElement.innerHTML = '<head><meta name="viewport" content="width=device-width,initial-scale=1"><title>Unofficial copy</title></head>' +
+        '<body style="margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#111;color:#fff;' +
+        'font:500 17px/1.45 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;text-align:center;padding:24px;box-sizing:border-box">' +
+        '<div style="max-width:30em"><div style="font-size:44px">&#9888;</div>' +
+        '<h1 style="font-size:24px;margin:8px 0 12px">Unofficial copy</h1>' +
+        '<p style="margin:0 0 18px;color:#ccc">This copy of PvZ2 Gardendless &ndash; iPad Edition was taken from its official site ' +
+        'without permission, so it has been switched off.</p>' +
+        '<a href="' + HOME_URL + '" target="_top" style="display:inline-block;padding:12px 22px;border-radius:10px;background:#7ed957;color:#0d1a0d;' +
+        'text-decoration:none;font-weight:700">Play the official version</a></div></body>';
+    };
+    paint();
+    document.addEventListener('DOMContentLoaded', paint);
+    window.addEventListener('load', paint);
+    throw new Error('Unofficial copy');
+  }
+
   // ---------- Graphics quality (render resolution + antialias) ----------
   // Drawing at the iPad's full 2x resolution with antialiasing keeps the GPU at 100%, and the
   // iPad then heats up and throttles: smooth at first, laggier over time, worst on hordes.

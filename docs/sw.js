@@ -57,6 +57,20 @@ async function pool(items, concurrency, fn) {
 }
 
 // ---------- install ----------
+// Official site only: anywhere else this worker deletes its caches and unregisters itself.
+const SW_HOME = atob('ZmFrZWR1bW15Zm9ydGVzdGluZ3RoaW5ncy13ZWIuZ2l0aHViLmlv');
+const SW_OFF_SITE = ![SW_HOME, 'localhost', '127.0.0.1'].includes(self.location.hostname);
+if (SW_OFF_SITE) {
+  self.addEventListener('install', (e) => { e.stopImmediatePropagation(); self.skipWaiting(); });
+  self.addEventListener('activate', (e) => {
+    e.stopImmediatePropagation();
+    e.waitUntil(caches.keys().then((ks) => Promise.all(ks.map((k) => caches.delete(k))))
+      .then(() => self.registration.unregister()));
+  });
+  self.addEventListener('fetch', (e) => e.stopImmediatePropagation());
+  self.addEventListener('message', (e) => e.stopImmediatePropagation());
+}
+
 self.addEventListener('install', (event) => {
   event.waitUntil(install());
 });

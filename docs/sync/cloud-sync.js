@@ -39,7 +39,9 @@ function byteLength(str) {
 }
 
 const config = window.PVZ_FIREBASE_CONFIG;
-const configured = config && config.apiKey && !String(config.apiKey).startsWith('YOUR_');
+const onHome = location.hostname === ['fakedummyfortestingthings-web', 'github', 'io'].join('.') ||
+  location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+const configured = onHome && !window.__pvzBlocked && config && config.apiKey && !String(config.apiKey).startsWith('YOUR_');
 
 if (!configured) {
   setStatus('disabled', 'Add sync/firebase-config.js');
