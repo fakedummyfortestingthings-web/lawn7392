@@ -16,7 +16,7 @@
   // another site) shows an error screen instead of the game, removes its offline copy and
   // never touches the cloud saves.
   var HOME = atob('ZmFrZWR1bW15Zm9ydGVzdGluZ3RoaW5ncy13ZWIuZ2l0aHViLmlv');
-  var HOME_URL = 'https://' + HOME + '/lawn7392/';
+  var HOME_URL = 'https://' + HOME + '/pvz-ipad/';
   function siteAllowed() {
     var h = location.hostname;
     if (h !== HOME && h !== 'localhost' && h !== '127.0.0.1') return false;
